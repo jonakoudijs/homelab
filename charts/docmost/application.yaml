@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docmost-app
+  labels:
+    app: docmost-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost-app
+  template:
+    metadata:
+      labels:
+        app: docmost-app
+    spec:
+      containers:
+        - name: docmost-app
+          image: docmost/docmost:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: APP_URL
+              value: "https://wiki.koudijs.me"
+            - name: APP_SECRET
+              value: "85dddd8cc6ee37c6a952c88c3d4c00ebe97e5f9ab6c78b759f9784b2893243c0"
+            - name: DATABASE_URL
+              value: "postgresql://docmost:16828a082feb91fac2cbfa5dada7deb8@docmost-psql:5432/docmost?schema=public"
+            - name: REDIS_URL
+              value: "redis://docmost-redis:6379"
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: "/app/data/storage"
+              name: docmost-storage-vol
+      volumes:
+        - name: docmost-storage-vol
+          persistentVolumeClaim:
+            claimName: docmost-storage
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docmost-app
+spec:
+  selector:
+    app: docmost-app
+  ports:
+    - port: 3000
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docmost-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

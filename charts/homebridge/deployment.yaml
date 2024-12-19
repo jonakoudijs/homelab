@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homebridge
+  labels:
+    app: homebridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homebridge
+  template:
+    metadata:
+      labels:
+        app: homebridge
+    spec:
+      hostNetwork: true
+      containers:
+        - name: homebridge
+          image: homebridge/homebridge:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+          ports:
+            - containerPort: 8581            
+          volumeMounts:
+            - mountPath: "/homebridge"
+              name: homebridge-vol
+      volumes:
+        - name: homebridge-vol
+          persistentVolumeClaim:
+            claimName: homebridge-pvc

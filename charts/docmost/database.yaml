@@ -1,0 +1,66 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docmost-psql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docmost-psql
+  labels:
+    app: docmost-psql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docmost-psql
+  template:
+    metadata:
+      labels:
+        app: docmost-psql
+    spec:
+      containers:
+        - name: docmost-psql
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              name: docmost-psql
+          env:
+            - name: POSTGRES_DB
+              value: docmost
+            - name: POSTGRES_USER
+              value: docmost
+            - name: POSTGRES_PASSWORD
+              value: 16828a082feb91fac2cbfa5dada7deb8
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: docmost-psql-vol
+      volumes:
+        - name: docmost-psql-vol
+          persistentVolumeClaim:
+            claimName: docmost-psql
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docmost-psql
+spec:
+  selector:
+    app: docmost-psql
+  ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432

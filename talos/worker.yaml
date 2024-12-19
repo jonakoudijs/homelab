@@ -1,0 +1,84 @@
+version: v1alpha1
+debug: false
+persist: true
+
+machine:
+  type: worker
+  token: zi6ct1.ljc1ii6nzsctxk6c
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEI1RVRDUVM4bys3U0ZSRlFwRWhRaWZNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5ERXdNekV5TURNeE16WmFGdzB6TkRFd01qa3lNRE14TXpaYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBVlFnc3NhYlNTYWg3Vnl1U0JaTCszZFp4QzlycnVTbWpHa0QwCkpJVGFJZytqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVNElwWmJ6YUNzaEM4VXZMQgpidGhkVEpVTjFNY3dCUVlESzJWd0EwRUFJQlhPTFAzdGZrQUYyaTRCcWxzVUgveVY5Nm0yM3BQb20rZlZ5U3UwCmFVR2lmWnZUMEpUd1JTU2lwUnVQRWVsaU9VWVNIWlczbmNSdldHTk1VN0dQRHc9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: ""
+  certSANs: []
+
+  kubelet:
+    image: ghcr.io/siderolabs/kubelet:v1.31.1
+    defaultRuntimeSeccompProfileEnabled: true
+    disableManifestsDirectory: true
+    extraMounts:
+      - destination: /var/lib/longhorn
+        type: bind
+        source: /var/lib/longhorn
+        options:
+          - bind
+          - rshared
+          - rw
+        
+  network:
+    hostname: lab-mini-3
+    nameservers:
+      - 10.0.0.1
+    interfaces:
+      - interface: enp3s0f0
+        addresses:
+          - 10.0.0.222/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.0.0.1
+        dhcp: false
+
+  time:
+    servers:
+      - time.cloudflare.com
+
+  install:
+    disk: /dev/sda
+    image: ghcr.io/siderolabs/installer:v1.8.0
+    wipe: true
+
+  registries: {}
+
+  features:
+    rbac: true
+    stableHostname: true
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+    hostDNS:
+      enabled: true
+      forwardKubeDNSToHost: true
+        
+cluster:
+  id: HIkPkYLXBExeP68yL3UDP_rmPyKQPqbxYsu7Q_cMyMI=
+  secret: 2yuhEprE3M9ukdTYmACKtkuXqg/uqpJSUSnR0Mt/uVU=
+  controlPlane:
+    endpoint: https://10.0.0.220:6443
+  clusterName: homelab
+  network:
+    dnsDomain: cluster.local
+    podSubnets:
+      - 10.244.0.0/16
+    serviceSubnets:
+      - 10.96.0.0/12
+
+  token: ijs8pu.dzjgaud2yv3h24lb
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVRDZ0F3SUJBZ0lSQUxmYXFKOUZFaTFGZkZDWFR4aldsTUl3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREV3TXpFeU1ETXhNelphRncwek5ERXdNamt5TURNeApNelphTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVFNMzRDTmJZUG14ZXh0M1pHalM1TU9KNFl3RVMxcFhWN1hxdVpDampneU5jWkd3d1lxWkNScTd1RXIKU3UveTJrajNIL3NFck5YTmNjdWxrQkJXb0dvdm8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGT2Vnb09rTUVMamJvK2ZGSGlNQURSdG5MRVFhTUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSUVSZUlyVG4KVktmVlMvUjZWQVYrTTRxdUxRMGdBazhTU3NZSWZ4aDUwVVBvQWlFQWc4VkZna2tKd0RkTW1sN3BoK1JnbXpOZQpCSXlvNWdmM0NNMkl0ZnFWd3lBPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: ""
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}

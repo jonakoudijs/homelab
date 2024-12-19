@@ -1,0 +1,57 @@
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: steamcmd-restart
+  namespace: steamcmd
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: steamcmd-restart
+  namespace: steamcmd
+rules:
+  - apiGroups: ["apps", "extensions"]
+    resources: ["deployments"]
+    resourceNames: ["steamcmd-api"]
+    verbs: ["get", "patch", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: steamcmd-restart
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: steamcmd-restart
+subjects:
+  - kind: ServiceAccount
+    name: steamcmd-restart
+    namespace: steamcmd
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: steamcmd-restart
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 600
+      template:
+        spec:
+          serviceAccountName: steamcmd-restart
+          restartPolicy: Never
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl
+              command:
+                - "kubectl"
+                - "rollout"
+                - "restart"
+                - "deployment/steamcmd-api"

@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: docmost
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  rules:
+    - host: wiki.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: docmost-app
+                port:
+                  number: 3000
+  tls:
+    - secretName: wiki-docmost-tls
+      hosts:
+        - wiki.koudijs.me

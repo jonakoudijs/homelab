@@ -1,0 +1,158 @@
+---
+helmDefaults:
+  kubeContext: homelab
+
+hooks:
+  - events: ["prepare"]
+    showlogs: true
+    command: "kubectl"
+    args:
+      - "config"
+      - "set-context"
+      - "--current"
+      - "--namespace=kube-system"
+
+repositories:
+  - name: nfs-subdir-external-provisioner
+    url: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+  - name: metallb
+    url: https://metallb.github.io/metallb
+  - name: traefik
+    url: https://traefik.github.io/charts
+  - name: sealed-secrets
+    url: https://bitnami-labs.github.io/sealed-secrets
+  - name: longhorn
+    url: https://charts.longhorn.io
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: nextcloud
+    url: https://nextcloud.github.io/helm/
+
+releases:
+  - name: metallb
+    namespace: kube-system
+    chart: metallb/metallb
+  - name: metallb-config
+    namespace: kube-system
+    chart: charts/metallb
+    needs:
+      - kube-system/metallb
+  - name: traefik 
+    namespace: kube-ingress
+    createNamespace: true
+    chart: traefik/traefik
+    values:
+      - globalArguments: []
+      - providers:
+          kubernetesCRD:
+            allowExternalNameServices: true
+            enabled: true
+          kubernetesIngress:
+            allowExternalNameServices: true
+            enabled: true
+          kubernetesGateway:
+            enabled: true
+      - service:
+          annotations:
+            service.beta.kubernetes.io/metal-lb: "true"
+            metallb.universe.tf/address-pool: default-pool
+      - logs:
+          general:
+            level: "DEBUG"
+  - name: sealed-secrets
+    namespace: kube-system
+    chart: sealed-secrets/sealed-secrets
+    set:
+      - name: fullnameOverride
+        value: sealed-secrets-controller
+
+  ## storage
+  - name: nfs-subdir-external-provisioner
+    namespace: kube-system
+    chart: nfs-subdir-external-provisioner/nfs-subdir-external-provisioner
+    values:
+      - nfs:
+          server: 10.0.0.229
+          path: /volume1/homelab
+      - storageClass:
+          defaultClass: true
+  - name: longhorn-namespace
+    chart: charts/longhorn
+  - name: longhorn
+    namespace: longhorn
+    chart: longhorn/longhorn
+    values:
+      - persistence:
+          defaultClass: false
+
+  ## cert manager
+  - name: cert-manager
+    namespace: kube-certs
+    createNamespace: true
+    chart: jetstack/cert-manager
+    set:
+      - name: crds.enabled
+        value: true
+  - name: cert-manager-config
+    namespace: kube-certs
+    chart: charts/cert-manager
+    needs:
+      - kube-certs/cert-manager
+
+  ## external
+  - name: unifi
+    namespace: unifi
+    createNamespace: true
+    chart: charts/unifi
+  - name: synology
+    namespace: synology
+    createNamespace: true
+    chart: charts/synology
+
+#  - name: homebridge
+#    namespace: homebridge
+#    createNamespace: true
+#    chart: charts/homebridge
+
+  ## apps
+  - name: test
+    namespace: test
+    createNamespace: true
+    chart: charts/test
+
+  - name: steamcmd-app
+    namespace: steamcmd
+    createNamespace: true
+    chart: charts/steamcmd
+
+  - name: docmost
+    namespace: docmost
+    createNamespace: true
+    chart: charts/docmost
+
+  - name: nextcloud
+    namespace: nextcloud
+    createNamespace: true
+    chart: nextcloud/nextcloud
+    values:
+      - ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-production
+          tls:
+            - secretName: nextcloud-tls
+              hosts:
+                - cloud.koudijs.me
+      - nextcloud:
+          host: cloud.koudijs.me
+          existingSecret:
+            enabled: true
+            secretName: nextcloud-credentials
+      - persistence:
+          enabled: true
+          storageClass: nfs-client
+  - name: nextcloud-config
+    namespace: nextcloud
+    chart: charts/nextcloud
+    needs:
+      - nextcloud/nextcloud

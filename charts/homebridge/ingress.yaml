@@ -1,0 +1,34 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: homebridge
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    #traefik.ingress.kubernetes.io/router.middlewares: default-redirect-https@kubernetescrd
+spec:
+  rules:
+    - host: bridge.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name:  homebridge
+                port:
+                  number: 8581
+  tls:
+    - secretName: homebridge-cert
+      hosts:
+        - bridge.koudijs.me
+
+#---
+#apiVersion: traefik.containo.us/v1alpha1
+#kind: Middleware
+#metadata:
+#  name: redirect-https
+#spec:
+#  redirectScheme:
+#    scheme: https
+#    permanent: true

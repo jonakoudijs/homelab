@@ -1,0 +1,66 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: steamcmd-api
+  labels:
+    app: steamcmd-api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: steamcmd-api
+  template:
+    metadata:
+      labels:
+        app: steamcmd-api
+    spec:
+      containers:
+        - name: steamcmd-api
+          image: steamcmd/api:latest
+          ports:
+            - containerPort: 8000
+              name: tcp-svc
+          env:
+            - name: VERSION
+              value: 1.14.0
+            - name: CACHE
+              value: "True"
+            - name: CACHE_TYPE
+              value: redis
+            - name: CACHE_EXPIRATION
+              value: "120"
+            - name: REDIS_HOST
+              value: steamcmd-redis-svc
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: 4jch9e2w4xptUqCSTq8lnyX
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: LOG_LEVEL
+              value: info
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+          livenessProbe:
+            httpGet:
+              path: /v1/info/740
+              port: tcp-svc
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 3
+            terminationGracePeriodSeconds: 3
+          startupProbe:
+            httpGet:
+              path: /v1/info/740
+              port: tcp-svc
+            failureThreshold: 2
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+            periodSeconds: 3
+            terminationGracePeriodSeconds: 3

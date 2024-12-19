@@ -1,0 +1,17 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: unifi-cloud-key-route
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`unifi.koudijs.me`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: unifi-cloud-key
+          port: 443
+          serversTransport: skip-tls-validation
+  tls:
+    secretName: unifi-cloud-key-tls

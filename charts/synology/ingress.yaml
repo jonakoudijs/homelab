@@ -1,0 +1,17 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: synology-route
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`nas.koudijs.me`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: synology
+          port: 5000
+          serversTransport: skip-tls-validation
+  tls:
+    secretName: synology-tls

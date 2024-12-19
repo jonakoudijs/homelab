@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: steamcmd-redis
+spec:
+  selector:
+    matchLabels:
+      app: steamcmd-redis
+  serviceName: steamcmd-redis-svc
+  replicas: 1
+  minReadySeconds: 2
+  template:
+    metadata:
+      labels:
+        app: steamcmd-redis
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: steamcmd-redis
+        image: bitnami/redis:6.0
+        ports:
+          - containerPort: 6379
+            name: tcp-svc
+        env:
+          - name: REDIS_PORT_NUMBER
+            value: "6379"
+          - name: REDIS_PASSWORD
+            value: "4jch9e2w4xptUqCSTq8lnyX"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: steamcmd-redis-svc
+spec:
+  selector:
+    app: steamcmd-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: tcp-svc

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: theforest
+spec:
+  type: LoadBalancer
+  selector:
+    app: theforest
+  ports:
+    - name: theforest-steam
+      port: 8766
+    - name: theforest-game
+      port: 27015
+    - name: theforest-query
+      port: 27016

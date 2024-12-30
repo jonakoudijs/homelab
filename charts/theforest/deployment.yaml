@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: theforest
+  labels:
+    app: theforest
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: theforest
+  template:
+    metadata:
+      labels:
+        app: theforest
+    spec:
+      hostNetwork: true
+      containers:
+        - name: theforest
+          image: jonakoudijs/forest:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: theforest-steam
+              containerPort: 8766
+            - name: theforest-game
+              containerPort: 27015
+            - name: theforest-query
+              containerPort: 27016
+          volumeMounts:
+            - name: theforest-config-volume
+              mountPath: "/data/config"
+            - name: theforest-saves-volume
+              mountPath: "/data/saves"
+      volumes:
+        - name: theforest-config-volume
+          configMap:
+            name: theforest-config
+            defaultMode: 0777
+            items:
+              - key: "server"
+                path: "server.cfg"
+        - name: theforest-saves-volume
+          persistentVolumeClaim:
+            claimName: theforest-saves
+

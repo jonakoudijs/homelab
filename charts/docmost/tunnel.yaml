@@ -58,6 +58,6 @@ data:
     metrics: 0.0.0.0:2000
     no-autoupdate: true
     ingress:
-      - hostname: wiki.jona.io
+      - hostname: wiki.koudijs.me
         service: http://docmost-app:3000
       - service: http_status:404

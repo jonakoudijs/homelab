@@ -130,29 +130,22 @@ releases:
     createNamespace: true
     chart: charts/docmost
 
-  - name: nextcloud
-    namespace: nextcloud
+  ## games
+  - name: enshrouded
+    namespace: games
     createNamespace: true
-    chart: nextcloud/nextcloud
+    chart: charts/enshrouded
     values:
-      - ingress:
-          enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: letsencrypt-production
-          tls:
-            - secretName: nextcloud-tls
-              hosts:
-                - cloud.koudijs.me
-      - nextcloud:
-          host: cloud.koudijs.me
-          existingSecret:
-            enabled: true
-            secretName: nextcloud-credentials
-      - persistence:
-          enabled: true
-          storageClass: nfs-client
-  - name: nextcloud-config
-    namespace: nextcloud
-    chart: charts/nextcloud
-    needs:
-      - nextcloud/nextcloud
+      - resources:
+          requests:
+            memory: 6G
+            cpu: 2.0
+      - volumes:
+          storageClassName: "longhorn"
+      - config:  
+          serverName: "Jona Server"
+          serverPassword: "Sunshine"
+  - name: theforest
+    namespace: games
+    chart: charts/theforest
+

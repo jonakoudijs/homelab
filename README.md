@@ -40,7 +40,11 @@ In this example you see that the node specified is `10.0.0.221` and cluster ip
 address where `talosctl` communicates with is `10.0.0.220`.
 
 The installation of the Talos nodes are done by installing the latest version
-via ISO. After installation the required patches need to be generated to add
+via ISO. After installation the the worker configuration needs to be applied:
+```bash
+talosctl apply -e 10.0.0.220 -n <tmp-dhcp-ip> -f worker.yaml --insecure
+```
+After installation the required patches need to be generated to add
 the required extensions:
 ```bash
 curl -X POST --data-binary @talos/image.yaml https://factory.talos.dev/schematics

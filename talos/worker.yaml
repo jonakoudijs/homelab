@@ -24,13 +24,13 @@ machine:
           - rw
         
   network:
-    hostname: lab-mini-3
+    hostname: lab-mini-4
     nameservers:
       - 10.0.0.1
     interfaces:
       - interface: enp3s0f0
         addresses:
-          - 10.0.0.222/24
+          - 10.0.0.223/24
         routes:
           - network: 0.0.0.0/0
             gateway: 10.0.0.1

@@ -148,4 +148,3 @@ releases:
   - name: theforest
     namespace: games
     chart: charts/theforest
-

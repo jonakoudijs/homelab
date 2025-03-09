@@ -117,3 +117,7 @@ releases:
   - name: homebridge
     namespace: homebridge
     chart: charts/homebridge
+  - name: adguard
+    namespace: adguard
+    createNamespace: true
+    chart: charts/adguard

@@ -3,8 +3,12 @@
 # Homelab
 
 Setup configuration for my homelab cluster. The entire setup and configuration
-is defined as IAC. This cluster runs Kubernetes 24/7 at my home and is used to
+is defined as IAC. This platform runs Kubernetes 24/7 at my home and is used to
 run various tools and services I use personally and for testing new things.
+
+Currently it consists of a Talos 1-node cluster but it changes regularly. The
+hardware used is a Mac Mini, late 2014. These are relatively cheap second hand
+and have a really low power consumption.
 
 ## Requirements
 
@@ -24,7 +28,9 @@ generate the required files to configure the Talos cluster:
 ```bash
 talosctl gen config homelab https://10.0.0.201:6443
 ```
-The Mac Mini's need to have a boot loader configured. The easiest way is to
+In this example the node will be configured with the ip `10.0.0.201`.
+
+When using a Mac Mini, a boot loader needs to be configured. The easiest way is to
 first install [Ubuntu 22.04](https://ubuntu.com/download/server/thank-you?version=22.04.5&architecture=amd64&lts=true)
 and then install Talos over that.
 
@@ -43,6 +49,12 @@ via ISO. After installation the the Talos configuration needs to be applied:
 ```bash
 talosctl apply -e 10.0.0.201 -n <tmp-dhcp-ip> -f controlplane.yaml --insecure
 ```
+If the cluster consists of 1 node make sure to allow scheduling by adding the
+following line to the `controlplane.yaml`:
+```yaml
+cluster:
+    allowSchedulingOnControlPlanes: true
+```
 
 ## Helm Charts
 
@@ -51,6 +63,8 @@ Documentation on configurations of various components can be found here:
 
 - [Traefik](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml)
 - [KubeSeal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#overview)
+- [Local Path Provisioner](https://github.com/rancher/local-path-provisioner/tree/master/deploy/chart/local-path-provisioner)
+- [NFS External provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/charts/nfs-subdir-external-provisioner)
 
 ## Secrets
 

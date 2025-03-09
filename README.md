@@ -16,7 +16,6 @@ The following local tools are needed to set everything up:
 - [gnupg](https://gnupg.org)
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#kubeseal)
 - [talosctl](https://www.talos.dev/latest/learn-more/talosctl/)
-- [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/create-local-tunnel/)
 
 ## Initial Setup
 
@@ -34,24 +33,15 @@ and then install Talos over that.
 The cluster is setup with [Talos](https://www.talos.dev) and can be managed
 with [talosctl](https://www.talos.dev/latest/learn-more/talosctl/). For example:
 ```bash
-talosctl --nodes 10.0.0.221 --endpoints 10.0.0.220 dashboard
+talosctl --nodes 10.0.0.201 --endpoints 10.0.0.201 dashboard
 ```
-In this example you see that the node specified is `10.0.0.221` and cluster ip
-address where `talosctl` communicates with is `10.0.0.220`.
+In this example you see that the node specified is `10.0.0.201` and cluster ip
+address where `talosctl` communicates with is also `10.0.0.201`.
 
 The installation of the Talos nodes are done by installing the latest version
-via ISO. After installation the the worker configuration needs to be applied:
+via ISO. After installation the the Talos configuration needs to be applied:
 ```bash
-talosctl apply -e 10.0.0.220 -n <tmp-dhcp-ip> -f worker.yaml --insecure
-```
-After installation the required patches need to be generated to add
-the required extensions:
-```bash
-curl -X POST --data-binary @talos/image.yaml https://factory.talos.dev/schematics
-<image-uid>
-```
-```bash
-talosctl upgrade -e 10.0.0.220 -n 10.0.0.221 --image factory.talos.dev/installer/<image-uid>:v1.8.0
+talosctl apply -e 10.0.0.201 -n <tmp-dhcp-ip> -f controlplane.yaml --insecure
 ```
 
 ## Helm Charts

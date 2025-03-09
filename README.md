@@ -23,7 +23,7 @@ The following local tools are needed to set everything up:
 
 ## Initial Setup
 
-These manual setups are needed for the initial setup. The first setup is to
+These manual setups are needed for the initial setup. The first step is to
 generate the required files to configure the Talos cluster:
 ```bash
 talosctl gen config homelab https://10.0.0.201:6443

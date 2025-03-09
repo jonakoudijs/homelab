@@ -5,4 +5,4 @@ metadata:
   name: default-pool
 spec:
   addresses:
-    - 10.0.0.230-10.0.0.239
+    - 10.0.0.205-10.0.0.209

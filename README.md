@@ -72,14 +72,3 @@ Then encrypt this secret file with the `kubeseal` command:
 ```bash
 kubeseal -f original-secret.yaml -w secret.yaml
 ```
-
-## Issues
-
-To fix the following `helmfile` error:
-```bash
-Error: UPGRADE FAILED: failed to create resource: Internal error occurred: failed calling webhook "validate.nginx.ingress.kubernetes.io": failed to call webhook: Post "https://ingress-nginx-controller-admission.kube-ingress.svc:443/networking/v1/ingresses?timeout=10s": no endpoints available for service "ingress-nginx-controller-admission"
-```
-I had to delete the default ValidatingWebhookConfiguration:
-```bash
-kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
-```

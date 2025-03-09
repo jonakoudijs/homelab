@@ -22,7 +22,7 @@ The following local tools are needed to set everything up:
 These manual setups are needed for the initial setup. The first setup is to
 generate the required files to configure the Talos cluster:
 ```bash
-talosctl gen config homelab https://10.0.0.220:6443
+talosctl gen config homelab https://10.0.0.201:6443
 ```
 The Mac Mini's need to have a boot loader configured. The easiest way is to
 first install [Ubuntu 22.04](https://ubuntu.com/download/server/thank-you?version=22.04.5&architecture=amd64&lts=true)

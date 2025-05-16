@@ -65,6 +65,7 @@ Documentation on configurations of various components can be found here:
 - [KubeSeal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#overview)
 - [Local Path Provisioner](https://github.com/rancher/local-path-provisioner/tree/master/deploy/chart/local-path-provisioner)
 - [NFS External provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/charts/nfs-subdir-external-provisioner)
+- [Jellyfin](https://github.com/jellyfin/jellyfin-helm/tree/master/charts/jellyfin)
 
 ## Secrets
 

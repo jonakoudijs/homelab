@@ -23,7 +23,8 @@ repositories:
     url: https://bitnami-labs.github.io/sealed-secrets
   - name: jetstack
     url: https://charts.jetstack.io
-
+  - name: jellyfin
+    url: https://jellyfin.github.io/jellyfin-helm
 
 releases:
   ## system
@@ -117,7 +118,31 @@ releases:
   - name: homebridge
     namespace: homebridge
     chart: charts/homebridge
-  - name: adguard
-    namespace: adguard
-    createNamespace: true
-    chart: charts/adguard
+  - name: jellyfin
+    namespace: jellyfin
+    chart: jellyfin/jellyfin
+    values:
+      - ingress:
+          enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-production
+          hosts:
+            - host: media.koudijs.me
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+
+          tls:
+            - secretName: jellyfin-cert
+              hosts:
+                - media.koudijs.me
+      - persistence:
+          media:
+            accessMode: ReadWriteMany
+            size: 25Gi
+            storageClass: nfs-client
+
+  #- name: adguard
+  #  namespace: adguard
+  #  createNamespace: true
+  #  chart: charts/adguard

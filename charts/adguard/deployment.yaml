@@ -20,8 +20,8 @@ spec:
         - name: adguard-home
           image: adguard/adguardhome:latest
           imagePullPolicy: IfNotPresent
-          #securityContext:
-          #  privileged: true
+          securityContext:
+            privileged: true
           ports:
             - containerPort: 53
               protocol: TCP
@@ -46,7 +46,7 @@ spec:
             - containerPort: 5443
               protocol: TCP
             - containerPort: 5443
-              protocol: TCP
+              protocol: UDP
             - containerPort: 6060
               protocol: TCP
           volumeMounts:
@@ -57,7 +57,7 @@ spec:
       volumes:
         - name: adguard-conf
           persistentVolumeClaim:
-            claimName: homebridge-conf
+            claimName: adguard-conf
         - name: adguard-work
           persistentVolumeClaim:
-            claimName: homebridge-work
+            claimName: adguard-work

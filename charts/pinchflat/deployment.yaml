@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pinchflat
+  labels:
+    app: pinchflat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pinchflat
+  template:
+    metadata:
+      labels:
+        app: pinchflat
+    spec:
+      containers:
+        - name: pinchflat
+          image: ghcr.io/kieraneglin/pinchflat:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+          ports:
+            - containerPort: 8945            
+          volumeMounts:
+            - mountPath: "/config"
+              name: pinchflat-config-vol
+            - mountPath: "/downloads"
+              name: pinchflat-downloads-vol
+      volumes:
+        - name: pinchflat-config-vol
+          persistentVolumeClaim:
+            claimName: pinchflat-config
+        - name: pinchflat-downloads-vol
+          persistentVolumeClaim:
+            claimName: pinchflat-downloads

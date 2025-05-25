@@ -118,6 +118,10 @@ releases:
   - name: homebridge
     namespace: homebridge
     chart: charts/homebridge
+  - name: pinchflat
+    namespace: pinchflat
+    createNamespace: true
+    chart: charts/pinchflat
   - name: jellyfin
     namespace: jellyfin
     chart: jellyfin/jellyfin
@@ -141,8 +145,8 @@ releases:
             accessMode: ReadWriteMany
             size: 25Gi
             storageClass: nfs-client
-
-  #- name: adguard
-  #  namespace: adguard
-  #  createNamespace: true
-  #  chart: charts/adguard
+  - name: adguard-namespace
+    chart: charts/adguard-namespace
+  - name: adguard
+    namespace: adguard
+    chart: charts/adguard

@@ -2,22 +2,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata: 
-  name: adguard-home
+  name: pinchflat
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   rules:
-    - host: guard.koudijs.me
+    - host: youtube.koudijs.me
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name:  adguard-home
+                name:  pinchflat
                 port:
-                  number: 3000
+                  number: 8945
   tls:
-    - secretName: adguard-home-cert
+    - secretName: pinchflat-cert
       hosts:
-        - guard.koudijs.me
+        - youtube.koudijs.me

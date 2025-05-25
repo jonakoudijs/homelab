@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: adguard-home
+  name: pinchflat
 spec:
   selector:
-    app: adguard-home
+    app: pinchflat
   ports:
-    - port: 3000
+    - port: 8945

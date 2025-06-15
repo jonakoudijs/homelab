@@ -1,0 +1,40 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshrss
+  labels:
+    app: freshrss
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: freshrss
+  template:
+    metadata:
+      labels:
+        app: freshrss
+    spec:
+      containers:
+        - name: freshrss
+          image: freshrss/freshrss:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: CRON_MIN
+              value: "1,31"
+          ports:
+            - containerPort: 80            
+          volumeMounts:
+            - mountPath: "/var/www/FreshRSS/data"
+              name: freshrss-data-vol
+            - mountPath: "/var/www/FreshRSS/extensions"
+              name: freshrss-extensions-vol
+      volumes:
+        - name: freshrss-data-vol
+          persistentVolumeClaim:
+            claimName: freshrss-data
+        - name: freshrss-extensions-vol
+          persistentVolumeClaim:
+            claimName: freshrss-extensions

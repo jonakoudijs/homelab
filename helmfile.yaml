@@ -122,6 +122,10 @@ releases:
     namespace: pinchflat
     createNamespace: true
     chart: charts/pinchflat
+  - name: freshrss
+    namespace: freshrss
+    createNamespace: true
+    chart: charts/freshrss
   - name: jellyfin
     namespace: jellyfin
     chart: jellyfin/jellyfin

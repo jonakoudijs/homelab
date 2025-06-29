@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: invoiceshelf
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  rules:
+    - host: shelf.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name:  invoiceshelf
+                port:
+                  number: 80
+  tls:
+    - secretName: invoiceshelf-cert
+      hosts:
+        - shelf.koudijs.me

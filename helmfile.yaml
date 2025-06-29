@@ -154,3 +154,7 @@ releases:
   - name: adguard
     namespace: adguard
     chart: charts/adguard
+
+  - name: invoiceshelf
+    namespace: invoiceshelf
+    chart: charts/invoiceshelf

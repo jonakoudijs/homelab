@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoiceshelf
+  labels:
+    app: invoiceshelf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invoiceshelf
+  template:
+    metadata:
+      labels:
+        app: invoiceshelf
+    spec:
+      containers:
+        - name: invoiceshelf
+          image: invoiceshelf/invoiceshelf:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PHP_TZ
+              value: "Europe/Amsterdam"
+            - name: TIMEZONE
+              value: "Europe/Amsterdam"
+            - name: APP_NAME
+              value: "Cloudijs"
+            - name: APP_ENV
+              value: "local"
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_URL
+              value: "https://shelf.koudijs.me"
+            - name: CACHE_STORE
+              value: "file"
+            #- name: SESSION_DRIVER
+            #  value: "file"
+            #- name: SESSION_LIFETIME
+            #  value: "120"
+            #- name: SESSION_ENCRYPT
+            #  value: "false"
+            #- name: SESSION_PATH
+            #  value: "/"
+            - name: SESSION_DOMAIN
+              value: "shelf.koudijs.me"
+            - name: SANCTUM_STATEFUL_DOMAINS
+              value: "shelf.koudijs.me"
+            - name: DB_CONNECTION
+              value: "sqlite"
+            #- name: DB_DATABASE
+            #  value: "/conf/database.sqlite"
+            - name: STARTUP_DELAY
+              value: ""
+          ports:
+            - containerPort: 80            
+          volumeMounts:
+            - mountPath: "/conf"
+              name: invoiceshelf-conf-vol
+            - mountPath: "/data"
+              name: invoiceshelf-data-vol
+      volumes:
+        - name: invoiceshelf-conf-vol
+          persistentVolumeClaim:
+            claimName: invoiceshelf-conf
+        - name: invoiceshelf-data-vol
+          persistentVolumeClaim:
+            claimName: invoiceshelf-data

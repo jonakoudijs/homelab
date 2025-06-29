@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: invoiceshelf
+spec:
+  selector:
+    app: invoiceshelf
+  ports:
+    - port: 80

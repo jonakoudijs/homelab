@@ -5,6 +5,8 @@ metadata:
   name: homebridge
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Homebridge
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/38217527
 spec:
   rules:
     - host: bridge.koudijs.me

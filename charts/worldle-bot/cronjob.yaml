@@ -1,0 +1,31 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: worldle-bot
+spec:
+  schedule: "0 5 * * *" # 07:00 AM
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: worldle-bot
+              image: jonakoudijs/worldle-bot
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: SLACK_BOT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: worldle-bot-secret
+                      key: SLACK_BOT_TOKEN
+                - name: SLACK_CHANNEL
+                  valueFrom:
+                    secretKeyRef:
+                      name: worldle-bot-secret
+                      key: SLACK_CHANNEL

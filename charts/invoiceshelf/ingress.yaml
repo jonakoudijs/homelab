@@ -5,6 +5,8 @@ metadata:
   name: invoiceshelf
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: InvoiceShelf
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/157853350
 spec:
   rules:
     - host: shelf.koudijs.me

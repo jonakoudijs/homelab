@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kavorites
+  labels:
+    app: kavorites
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kavorites
+                port:
+                  number: 80
+  tls:
+    - secretName: kavorites-cert
+      hosts:
+        - koudijs.me

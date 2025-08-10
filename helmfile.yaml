@@ -116,6 +116,10 @@ releases:
     chart: charts/synology
 
   ## apps
+  - name: kavorites
+    namespace: kavorites
+    createNamespace: true
+    chart: charts/kavorites
   - name: homebridge-namespace
     chart: charts/homebridge-namespace
   - name: homebridge

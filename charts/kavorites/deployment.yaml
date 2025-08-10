@@ -92,4 +92,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kavorites
-  namespace: default 
+  namespace: kavorites

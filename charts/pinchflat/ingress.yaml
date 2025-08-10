@@ -5,6 +5,7 @@ metadata:
   name: pinchflat
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: YouTube
 spec:
   rules:
     - host: youtube.koudijs.me

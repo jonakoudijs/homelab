@@ -7,7 +7,6 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
-  ingressClassName: nginx
   rules:
     - host: koudijs.me
       http:

@@ -43,7 +43,7 @@ releases:
     chart: traefik/traefik-crds
     values:
       - gatewayAPI: true
-  - name: traefik 
+  - name: traefik
     namespace: kube-ingress
     createNamespace: true
     chart: traefik/traefik
@@ -80,9 +80,9 @@ releases:
     chart: charts/local-path-provisioner
     values:
       - nodePathMap:
-        - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
-          paths:
-            - /var/local-path-provisioner
+          - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
+            paths:
+              - /var/local-path-provisioner
       - storageClass:
           defaultClass: true
   - name: nfs-external-provisioner

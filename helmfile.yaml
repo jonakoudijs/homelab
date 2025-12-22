@@ -141,24 +141,3 @@ releases:
     namespace: worldle
     createNamespace: true
     chart: charts/worldle-bot
-
-  - name: github-actions-controller
-    namespace: github-actions
-    createNamespace: true
-    chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
-    version: 0.12.1
-
-  - name: github-actions-secrets
-    namespace: github-actions
-    chart: charts/github-actions-secrets
-
-  - name: github-actions-lanlords
-    namespace: github-actions
-    chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
-    version: 0.12.1
-    values:
-      - githubConfigUrl: "https://github.com/lanlords"
-      - githubConfigSecret: github-actions-lanlords
-      - controllerServiceAccount:
-          name: github-actions-controller-gha-rs-controller
-          namespace: github-actions

@@ -125,39 +125,10 @@ releases:
   - name: homebridge
     namespace: homebridge
     chart: charts/homebridge
-  - name: pinchflat
-    namespace: pinchflat
-    createNamespace: true
-    chart: charts/pinchflat
   - name: freshrss
     namespace: freshrss
     createNamespace: true
     chart: charts/freshrss
-  - name: jellyfin
-    namespace: jellyfin
-    chart: jellyfin/jellyfin
-    values:
-      - ingress:
-          enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: letsencrypt-production
-            kavorites.koudijs.app/title: Jellyfin
-            kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/45698031
-          hosts:
-            - host: media.koudijs.me
-              paths:
-                - path: /
-                  pathType: ImplementationSpecific
-
-          tls:
-            - secretName: jellyfin-cert
-              hosts:
-                - media.koudijs.me
-      - persistence:
-          media:
-            accessMode: ReadWriteMany
-            size: 25Gi
-            storageClass: nfs-client
   - name: adguard-namespace
     chart: charts/adguard-namespace
   - name: adguard

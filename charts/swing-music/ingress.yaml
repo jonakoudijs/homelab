@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: swing-music
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Swing Music
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/125947721
+spec:
+  rules:
+    - host: music.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: swing-music
+                port:
+                  number: 1970
+  tls:
+    - secretName: swing-music-cert
+      hosts:
+        - music.koudijs.me

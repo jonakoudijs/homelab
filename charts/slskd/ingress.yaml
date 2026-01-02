@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: slskd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Soulseek
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/76762370
+spec:
+  rules:
+    - host: soulseek.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: slskd
+                port:
+                  number: 5030
+  tls:
+    - secretName: slskd-cert
+      hosts:
+        - soulseek.koudijs.me

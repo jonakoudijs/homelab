@@ -55,10 +55,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
-    name: http
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
   selector:
     app: kavorites
 ---
@@ -74,12 +74,12 @@ kind: ClusterRole
 metadata:
   name: kavorites
 rules:
-- apiGroups: [""]
-  resources: ["namespaces"]
-  verbs: ["list", "get"]
-- apiGroups: ["networking.k8s.io"]
-  resources: ["ingresses"]
-  verbs: ["list", "get"]
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["list", "get"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["list", "get"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -90,6 +90,6 @@ roleRef:
   kind: ClusterRole
   name: kavorites
 subjects:
-- kind: ServiceAccount
-  name: kavorites
-  namespace: kavorites
+  - kind: ServiceAccount
+    name: kavorites
+    namespace: kube-ingress

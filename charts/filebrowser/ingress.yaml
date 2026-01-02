@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: filebrowser
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Filebrowser
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/35781395
+spec:
+  rules:
+    - host: files.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: filebrowser
+                port:
+                  number: 80
+  tls:
+    - secretName: filebrowser-cert
+      hosts:
+        - files.koudijs.me

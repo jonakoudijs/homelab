@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slskd
+  labels:
+    app: slskd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slskd
+  template:
+    metadata:
+      labels:
+        app: slskd
+    spec:
+      containers:
+        - name: slskd
+          image: docker.io/slskd/slskd:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5030
+            - containerPort: 5031
+            - containerPort: 50300
+          env:
+            - name: SLSKD_REMOTE_CONFIGURATION
+              value: "true"
+          volumeMounts:
+            # Soulseek
+            - mountPath: /app
+              name: slskd-data
+            # Shares
+            - mountPath: /shares/audio
+              name: swing-music-data
+      volumes:
+        # Soulseek
+        - name: slskd-data
+          persistentVolumeClaim:
+            claimName: slskd-data
+        # Shares
+        - name: swing-music-data
+          persistentVolumeClaim:
+            claimName: swing-music-data

@@ -116,6 +116,18 @@ releases:
     namespace: freshrss
     createNamespace: true
     chart: charts/freshrss
+  - name: filebrowser
+    namespace: apps
+    chart: charts/filebrowser
+  - name: swing-music
+    namespace: apps
+    chart: charts/swing-music
+  - name: slskd
+    namespace: apps
+    chart: charts/slskd
+  - name: audiobookshelf
+    namespace: apps
+    chart: charts/audiobookshelf
   # - name: adguard
   #   namespace: apps
   #   chart: charts/adguard

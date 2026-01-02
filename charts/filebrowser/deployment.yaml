@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filebrowser
+  labels:
+    app: filebrowser
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filebrowser
+  template:
+    metadata:
+      labels:
+        app: filebrowser
+    spec:
+      containers:
+        - name: filebrowser
+          image: docker.io/filebrowser/filebrowser:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            # Apps
+            - mountPath: /srv/music
+              name: swing-music-data
+            - mountPath: /srv/soulseek
+              name: slskd-data
+            - mountPath: /srv/audiobooks
+              name: audiobookshelf-audiobooks
+            # Filebrowser
+            - mountPath: /database
+              name: filebrowser-vol-database
+            - mountPath: /config
+              name: filebrowser-vol-config
+      volumes:
+        # Apps
+        - name: swing-music-data
+          persistentVolumeClaim:
+            claimName: swing-music-data
+        - name: slskd-data
+          persistentVolumeClaim:
+            claimName: slskd-data
+        - name: audiobookshelf-audiobooks
+          persistentVolumeClaim:
+            claimName: audiobookshelf-audiobooks
+        # Filebrowser
+        - name: filebrowser-vol-database
+          persistentVolumeClaim:
+            claimName: filebrowser-database
+        - name: filebrowser-vol-config
+          persistentVolumeClaim:
+            claimName: filebrowser-config

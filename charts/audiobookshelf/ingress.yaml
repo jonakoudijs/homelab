@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: audiobookshelf
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Audiobooks
+    kavorites.koudijs.app/image-url: https://www.audiobookshelf.org/Logo.png
+spec:
+  rules:
+    - host: audiobooks.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: audiobookshelf
+                port:
+                  number: 80
+  tls:
+    - secretName: audiobookshelf-cert
+      hosts:
+        - audiobooks.koudijs.me

@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swing-music
+  labels:
+    app: swing-music
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swing-music
+  template:
+    metadata:
+      labels:
+        app: swing-music
+    spec:
+      containers:
+        - name: swing-music
+          image: ghcr.io/swingmx/swingmusic:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1970
+          volumeMounts:
+            - mountPath: /music
+              name: swing-music-data
+            - mountPath: /config
+              name: swing-music-config
+      volumes:
+        - name: swing-music-data
+          persistentVolumeClaim:
+            claimName: swing-music-data
+        - name: swing-music-config
+          persistentVolumeClaim:
+            claimName: swing-music-config

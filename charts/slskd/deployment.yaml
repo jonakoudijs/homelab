@@ -31,7 +31,9 @@ spec:
             - mountPath: /app
               name: slskd-data
             # Shares
-            - mountPath: /shares/audio
+            - mountPath: /shares/audiobooks
+              name: audiobookshelf-audiobooks
+            - mountPath: /shares/music
               name: swing-music-data
       volumes:
         # Soulseek
@@ -39,6 +41,9 @@ spec:
           persistentVolumeClaim:
             claimName: slskd-data
         # Shares
+        - name: audiobookshelf-audiobooks
+          persistentVolumeClaim:
+            claimName: audiobookshelf-audiobooks
         - name: swing-music-data
           persistentVolumeClaim:
             claimName: swing-music-data

@@ -6,9 +6,9 @@ Setup configuration for my homelab cluster. The entire setup and configuration
 is defined as IAC. This platform runs Kubernetes 24/7 at my home and is used to
 run various tools and services I use personally and for testing new things.
 
-Currently it consists of a Talos 1-node cluster but it changes regularly. The
-hardware used is a Mac Mini, late 2014. These are relatively cheap second hand
-and have a really low power consumption.
+Currently it consists of a [Talos](https://www.talos.dev) 1-node cluster but it
+changes regularly. The hardware used is a Mac Mini, late 2014. These are relatively
+cheap second hand and have a really low power consumption.
 
 ## Requirements
 
@@ -63,9 +63,11 @@ Documentation on configurations of various components can be found here:
 
 - [Traefik](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml)
 - [KubeSeal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#overview)
+- [Cert Manager](https://cert-manager.io/docs/)
 - [Local Path Provisioner](https://github.com/rancher/local-path-provisioner/tree/master/deploy/chart/local-path-provisioner)
 - [NFS External provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/charts/nfs-subdir-external-provisioner)
 - [Jellyfin](https://github.com/jellyfin/jellyfin-helm/tree/master/charts/jellyfin)
+- [Kavorites](https://github.com/jonakoudijs/kavorites)
 
 ## Secrets
 

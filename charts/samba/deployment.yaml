@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samba-server
+  labels:
+    app: samba-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: samba-server
+  template:
+    metadata:
+      labels:
+        app: samba-server
+    spec:
+      hostNetwork: true
+      containers:
+        - name: samba-server
+          image: quay.io/samba.org/samba-server:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 445
+          volumeMounts:
+            - mountPath: /share/music
+              name: swing-music-data
+            - mountPath: /share/audiobooks
+              name: audiobookshelf-audiobooks
+            - mountPath: /share/soulseek
+              name: slskd-data
+      volumes:
+        - name: swing-music-data
+          persistentVolumeClaim:
+            claimName: swing-music-data
+        - name: audiobookshelf-audiobooks
+          persistentVolumeClaim:
+            claimName: audiobookshelf-audiobooks
+        - name: slskd-data
+          persistentVolumeClaim:
+            claimName: slskd-data

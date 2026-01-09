@@ -29,6 +29,14 @@ spec:
               name: slskd-data
             - mountPath: /srv/audiobooks
               name: audiobookshelf-audiobooks
+            - mountPath: /srv/books
+              name: booklore-books
+            - mountPath: /srv/bookdrop
+              name: booklore-bookdrop
+            - mountPath: /srv/ephemera-downloads
+              name: ephemera-downloads
+            - mountPath: /srv/ephemera-ingest
+              name: ephemera-ingest
             # Filebrowser
             - mountPath: /database
               name: filebrowser-vol-database
@@ -45,6 +53,18 @@ spec:
         - name: audiobookshelf-audiobooks
           persistentVolumeClaim:
             claimName: audiobookshelf-audiobooks
+        - name: booklore-books
+          persistentVolumeClaim:
+            claimName: booklore-books
+        - name: booklore-bookdrop
+          persistentVolumeClaim:
+            claimName: booklore-bookdrop
+        - name: ephemera-downloads
+          persistentVolumeClaim:
+            claimName: ephemera-downloads
+        - name: ephemera-ingest
+          persistentVolumeClaim:
+            claimName: ephemera-ingest
         # Filebrowser
         - name: filebrowser-vol-database
           persistentVolumeClaim:

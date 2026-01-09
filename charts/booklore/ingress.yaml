@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: booklore
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Booklore
+    kavorites.koudijs.app/image-url: https://avatars.githubusercontent.com/u/223511455
+spec:
+  rules:
+    - host: books.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: booklore
+                port:
+                  number: 8888
+  tls:
+    - secretName: booklore-cert
+      hosts:
+        - books.koudijs.me

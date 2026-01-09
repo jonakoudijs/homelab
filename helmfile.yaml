@@ -128,9 +128,15 @@ releases:
   - name: audiobookshelf
     namespace: apps
     chart: charts/audiobookshelf
+  - name: booklore
+    namespace: apps
+    chart: charts/booklore
   - name: samba-server
     namespace: apps
     chart: charts/samba
+  - name: ephemera
+    namespace: apps
+    chart: charts/ephemera
   # - name: adguard
   #   namespace: apps
   #   chart: charts/adguard

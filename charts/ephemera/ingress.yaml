@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ephemera
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    kavorites.koudijs.app/title: Ephemera
+spec:
+  rules:
+    - host: ephemera.koudijs.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ephemera
+                port:
+                  number: 8286
+  tls:
+    - secretName: ephemera-cert
+      hosts:
+        - ephemera.koudijs.me

@@ -1,0 +1,72 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booklore-db
+spec:
+  selector:
+    app: booklore-db
+  ports:
+    - port: 3306
+      name: db
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: booklore-db
+  labels:
+    app: booklore-db
+spec:
+  selector:
+    matchLabels:
+      app: booklore-db
+  serviceName: "booklore-db"
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: booklore-db
+    spec:
+      terminationGracePeriodSeconds: 10
+      env:
+        - name:
+      containers:
+        - name: mariadb
+          image: lscr.io/linuxserver/mariadb:11.4.5
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: MYSQL_DATABASE
+              value: booklore
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: booklore-db-secrets
+                  key: mysql-root-password
+            - name: MYSQL_USER
+              value: booklore
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: booklore-db-secrets
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+              name: db
+          volumeMounts:
+            - name: config
+              mountPath: /config
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

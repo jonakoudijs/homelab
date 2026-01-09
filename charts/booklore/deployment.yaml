@@ -1,0 +1,58 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booklore
+  labels:
+    app: booklore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booklore
+  template:
+    metadata:
+      labels:
+        app: booklore
+    spec:
+      containers:
+        - name: booklore
+          image: docker.io/booklore/booklore:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BOOKLORE_PORT
+              value: "8888"
+            - name: USER_ID
+              value: "0"
+            - name: GROUP_ID
+              value: "0"
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: DATABASE_URL
+              value: "jdbc:mariadb://booklore-db:3306/booklore"
+            - name: DATABASE_USERNAME
+              value: "booklore"
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: booklore-db-secrets
+                  key: mysql-password
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - mountPath: /app/data
+              name: booklore-data
+            - mountPath: /books
+              name: booklore-books
+            - mountPath: /bookdrop
+              name: booklore-bookdrop
+      volumes:
+        - name: booklore-data
+          persistentVolumeClaim:
+            claimName: booklore-data
+        - name: booklore-books
+          persistentVolumeClaim:
+            claimName: booklore-books
+        - name: booklore-bookdrop
+          persistentVolumeClaim:
+            claimName: booklore-bookdrop

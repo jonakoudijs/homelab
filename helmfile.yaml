@@ -13,6 +13,8 @@ hooks:
       - "--namespace=kube-system"
 
 repositories:
+  - name: metrics-server
+    url: https://kubernetes-sigs.github.io/metrics-server/
   - name: metallb
     url: https://metallb.github.io/metallb
   - name: traefik
@@ -21,12 +23,19 @@ repositories:
     url: https://bitnami-labs.github.io/sealed-secrets
   - name: jetstack
     url: https://charts.jetstack.io
-  - name: ghcr
-    url: ghcr.io
-    oci: true
 
 releases:
   ## system
+  - name: metrics-server
+    namespace: kube-system
+    chart: metrics-server/metrics-server
+    values:
+      - defaultArgs:
+          - --cert-dir=/tmp
+          - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+          - --kubelet-insecure-tls=true
+          - --kubelet-use-node-status-port
+          - --metric-resolution=15s
   - name: metallb
     namespace: kube-system
     chart: metallb/metallb

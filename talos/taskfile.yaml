@@ -1,0 +1,130 @@
+---
+version: "3"
+
+vars:
+  NODES:
+    - { name: "lab-kube-1", ip: 10.0.0.210 }
+    - { name: "lab-kube-2", ip: 10.0.0.212 }
+    - { name: "lab-kube-3", ip: 10.0.0.214 }
+
+tasks:
+  default:
+    desc: List available talos tasks
+    cmds:
+      - task --list
+
+  secrets:
+    desc: Generate Talos secrets file
+    preconditions:
+      - sh: "! ls generated/secrets.yaml"
+        msg: "The secrets file 'secrets.yaml' already exists!"
+    generates:
+      - "generated/secrets.yaml"
+    cmds:
+
+  setup:
+    desc: First time setup of Talos cluster
+    cmds:
+      - for:
+          matrix:
+            NODE:
+              ref: .NODES
+        task: generate:{{.ITEM.NODE.name}}
+      - for:
+          matrix:
+            NODE:
+              ref: .NODES
+        task: setup-apply:{{.ITEM.NODE.name}}
+
+  setup-apply:*:
+    vars:
+      NODE_NAME: "{{index .MATCH 0}}"
+    cmd: |
+      echo "Enter the temporary IP for node {{.NODE_NAME}}:"
+      read NODE_IP
+      talosctl apply-config --insecure \
+        --file generated/{{.NODE_NAME}}.yaml \
+        --nodes $NODE_IP \
+        --mode reboot
+      sleep 10
+
+  generate:*:
+    desc: Generate controlplane config file
+    preconditions:
+      - sh: "ls generated/secrets.yaml"
+        msg: |
+          "The secrets file 'secrets.yaml' does not exists! Make sure to generate it first by:"
+          "> task talos:secrets"
+    env:
+      LAB_CLUSTER_ENDPOINT_PORT: "6443"
+      LAB_INSTALL_DISK: "/dev/nvme0n1"
+      LAB_INSTALL_IMAGE_SCHEMATIC: "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
+      LAB_INSTALL_IMAGE_VERSION: "1.13.3"
+      LAB_INSTALL_IMAGE_URL:
+        sh: echo "factory.talos.dev/metal-installer/${LAB_INSTALL_IMAGE_SCHEMATIC}:v${LAB_INSTALL_IMAGE_VERSION}"
+    vars:
+      NODE_NAME: "{{index .MATCH 0}}"
+    cmd: |
+      talosctl gen config ${LAB_CLUSTER_NAME} \
+        https://${LAB_CLUSTER_ENDPOINT_HOST}:${LAB_CLUSTER_ENDPOINT_PORT} \
+        --config-patch @lab-kube-all.yaml \
+        --config-patch @{{.NODE_NAME}}.yaml \
+        --install-disk ${LAB_INSTALL_DISK} \
+        --install-image ${LAB_INSTALL_IMAGE_URL} \
+        --output generated/{{.NODE_NAME}}.yaml \
+        --output-types controlplane \
+        --with-docs=false \
+        --with-examples=false \
+        --with-secrets generated/secrets.yaml \
+        --force
+
+  apply:
+    desc: Apply machine config to all nodes
+    cmds:
+      - for:
+          matrix:
+            NODE:
+              ref: .NODES
+        task: generate:{{.ITEM.NODE.name}}
+      - for:
+          matrix:
+            NODE:
+              ref: .NODES
+        task: apply:{{.ITEM.NODE.name}}:{{.ITEM.NODE.ip}}
+
+  reboot:
+    desc: Reboot all Talos nodes
+    prompt:
+      - "Are you sure?"
+    cmds:
+      - for:
+          matrix:
+            NODE:
+              ref: .NODES
+        task: reboot:{{.ITEM.NODE.name}}:{{.ITEM.NODE.ip}}
+
+  apply:*:*:
+    vars:
+      NODE_NAME: "{{index .MATCH 0}}"
+      NODE_IP: "{{index .MATCH 1}}"
+    cmd: |
+      talosctl apply \
+        --file generated/{{.NODE_NAME}}.yaml \
+        --nodes {{.NODE_IP}}
+      sleep 3
+
+    # cmd: |
+    #   talosctl apply \
+    #     --file generated/{{.NODE_NAME}}.yaml \
+    #     --nodes {{.NODE_IP}} \
+    #     --config-patch lab-kube-all.yaml \
+    #     --config-patch {{.NODE_NAME}}.yaml
+    #   sleep 5
+
+  reboot:*:*:
+    vars:
+      NODE_NAME: "{{index .MATCH 0}}"
+      NODE_IP: "{{index .MATCH 1}}"
+    cmds:
+      - talosctl reboot -n {{.NODE_IP}}
+      - sleep 10

@@ -1,0 +1,15 @@
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: lab-kube-1
+auto: off
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: eno1
+up: true
+addresses:
+  - address: 10.0.0.210/24
+routes:
+  - destination: 10.0.0.0/24
+    gateway: 10.0.0.1

@@ -1,0 +1,19 @@
+---
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.0.0.216
+link: eno1
+---
+cluster:
+  allowSchedulingOnControlPlanes: true
+machine:
+  ## persistent storage for Longhorn
+  kubelet:
+    extraMounts:
+      - destination: /var/lib/longhorn
+        type: bind
+        source: /var/lib/longhorn
+        options:
+          - bind
+          - rshared
+          - rw

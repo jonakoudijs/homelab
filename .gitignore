@@ -1,3 +1,9 @@
 # Temporary MacOS files
 .DS_Store
-talos/
+
+# Talos output files
+talos/generated/*
+!talos/generated/.gitkeep
+
+# Custom configuration
+.env

@@ -6,9 +6,9 @@ Setup configuration for my homelab cluster. The entire setup and configuration
 is defined as IAC. This platform runs Kubernetes 24/7 at my home and is used to
 run various tools and services I use personally and for testing new things.
 
-Currently it consists of a [Talos](https://www.talos.dev) 1-node cluster but it
-changes regularly. The hardware used is a Mac Mini, late 2014. These are relatively
-cheap second hand and have a really low power consumption.
+Currently it consists of a [Talos](https://www.talos.dev) 3-node cluster. The
+hardware used are BOSGAME E4 mini PC's. These are relatively cheap and have a
+low power consumption.
 
 ## Requirements
 
@@ -21,39 +21,49 @@ The following local tools are needed to set everything up:
 - [kubeseal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#kubeseal)
 - [talosctl](https://www.talos.dev/latest/learn-more/talosctl/)
 
-## Initial Setup
+## Customization
+
+Although the code in this repository is opinionated and contains hardcoded references,
+I tried to allow for easy customization where feasable via environment variables.
+The following settings can be set by exporting the variables or creating an `.env`
+file in the root of this repository:
+
+| Variable                  | Default | Description                           |
+|---------------------------|---------|---------------------------------------|
+| LAB_CLUSTER_NAME          | ""      | Name of the Kubernetes cluster.       |
+| LAB_CLUSTER_ENDPOINT_HOST | ""      | IP or host of the Kubernetes API VIP. |
+| LAB_CLUSTER_ENDPOINT_PORT | "6443"  | Port of the Kubernetes API VIP.       |
+
+## Talos Setup
+
+First generate the Talos image that will be used for installing the nodes from
+the [Talos Factory](https://factory.talos.dev). Make sure to select the following
+System Extensions:
+
+- `siderolabs/iscsi-tools`
+- `siderolabs/util-linux-tools`
+
+Alternatively you can use this schematic that contains the required extensions:
+> [https://factory.talos.dev](https://factory.talos.dev/?arch=amd64&platform=metal&schematic-id=613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245&target=metal&version=1.13.3)
 
 These manual setups are needed for the initial setup. The first step is to
-generate the required files to configure the Talos cluster:
-```bash
-talosctl gen config homelab https://10.0.0.201:6443
+generate the cluster secrets into `talos/generated/`:
+```sh
+task talos:secrets
 ```
-In this example the node will be configured with the ip `10.0.0.201`.
 
-When using a Mac Mini, a boot loader needs to be configured. The easiest way is to
-first install [Ubuntu 22.04](https://ubuntu.com/download/server/thank-you?version=22.04.5&architecture=amd64&lts=true)
-and then install Talos over that.
-
-## Talos Cluster
-
-The cluster is setup with [Talos](https://www.talos.dev) and can be managed
-with [talosctl](https://www.talos.dev/latest/learn-more/talosctl/). For example:
-```bash
-talosctl --nodes 10.0.0.201 --endpoints 10.0.0.201 dashboard
+Then run the setup command to generate the required files and apply them to the
+three defined nodes. This command will ask the temporary DHCP IP of each node.
+Run the command, boot the first node, enter the IP and hit enter. Then repeat
+this for the other two nodes:
+```sh
+task talos:setup
 ```
-In this example you see that the node specified is `10.0.0.201` and cluster ip
-address where `talosctl` communicates with is also `10.0.0.201`.
 
-The installation of the Talos nodes are done by installing the latest version
-via ISO. After installation the the Talos configuration needs to be applied:
-```bash
-talosctl apply -e 10.0.0.201 -n <tmp-dhcp-ip> -f controlplane.yaml --insecure
-```
-If the cluster consists of 1 node make sure to allow scheduling by adding the
-following line to the `controlplane.yaml`:
-```yaml
-cluster:
-    allowSchedulingOnControlPlanes: true
+After node configuration has been applied to the first node, the bootstrap
+command should still be executed manual once:
+```sh
+talosctl bootstrap -n 10.0.0.210
 ```
 
 ## Helm Charts
@@ -64,10 +74,7 @@ Documentation on configurations of various components can be found here:
 - [Traefik](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml)
 - [KubeSeal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#overview)
 - [Cert Manager](https://cert-manager.io/docs/)
-- [Local Path Provisioner](https://github.com/rancher/local-path-provisioner/tree/master/deploy/chart/local-path-provisioner)
 - [NFS External provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/charts/nfs-subdir-external-provisioner)
-- [Jellyfin](https://github.com/jellyfin/jellyfin-helm/tree/master/charts/jellyfin)
-- [Kavorites](https://github.com/jonakoudijs/kavorites)
 
 ## Secrets
 
@@ -75,7 +82,7 @@ Sensitive data like passwords, api keys etc. are stored in secrets. The tool
 [kubeseal](https://github.com/bitnami-labs/sealed-secrets) is used to be able
 to store secrets encrypted in the repository. Remember to specify the namespace
 in the secret before encrypting. For example:
-```bash
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -86,6 +93,6 @@ stringData:
   password: t0p-Secret
 ```
 Then encrypt this secret file with the `kubeseal` command:
-```bash
+```sh
 kubeseal -f original-secret.yaml -w secret.yaml
 ```

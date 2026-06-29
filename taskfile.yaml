@@ -1,0 +1,16 @@
+---
+version: "3"
+
+dotenv:
+  - .env
+
+includes:
+  talos:
+    taskfile: ./talos/taskfile.yaml
+    dir: ./talos
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list

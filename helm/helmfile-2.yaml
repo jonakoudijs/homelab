@@ -1,0 +1,47 @@
+---
+helmDefaults:
+  kubeContext: homelab
+
+hooks:
+  - events: ["prepare"]
+    showlogs: true
+    command: "kubectl"
+    args:
+      - "config"
+      - "set-context"
+      - "--current"
+      - "--namespace=kube-system"
+
+releases:
+  ## system
+  - name: metallb-config
+    namespace: kube-system
+    chart: config/metallb
+
+  ## ingress
+  - name: traefik
+    namespace: kube-system
+    chart: traefik/traefik
+    values:
+      - ingressClass:
+          enabled: true
+      - api:
+          dashboard: false
+      - providers:
+          kubernetesCRD:
+            allowCrossNamespace: true
+            allowExternalNameServices: true
+          kubernetesIngress:
+            allowExternalNameServices: true
+            enabled: true
+          kubernetesGateway:
+            enabled: true
+      - gateway:
+          listeners:
+            web:
+              namespacePolicy:
+                from: All
+      - service:
+          annotations:
+            service.beta.kubernetes.io/metal-lb: "true"
+            metallb.universe.tf/address-pool: default-pool

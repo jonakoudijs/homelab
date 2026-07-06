@@ -1,0 +1,15 @@
+---
+version: "3"
+
+tasks:
+  default:
+    desc: List available helm tasks
+    cmds:
+      - task --list
+
+  apply:
+    desc: Apply all charts and manifests vwith helmfile
+    cmds:
+      - helmfile apply --file helmfile-1.yaml
+      - sleep 2
+      - helmfile apply --file helmfile-2.yaml

@@ -1,0 +1,123 @@
+---
+helmDefaults:
+  kubeContext: homelab
+
+hooks:
+  - events: ["prepare"]
+    showlogs: true
+    command: "kubectl"
+    args:
+      - "config"
+      - "set-context"
+      - "--current"
+      - "--namespace=kube-system"
+
+repositories:
+  - name: metrics-server
+    url: https://kubernetes-sigs.github.io/metrics-server/
+  - name: metallb
+    url: https://metallb.github.io/metallb
+  - name: traefik
+    url: https://traefik.github.io/charts
+  - name: sealed-secrets
+    url: https://bitnami.github.io/sealed-secrets
+  - name: longhorn
+    url: https://charts.longhorn.io
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: traefik
+    url: https://traefik.github.io/charts
+
+releases:
+  ## system
+  - name: metrics-server
+    namespace: kube-system
+    chart: metrics-server/metrics-server
+    values:
+      - defaultArgs:
+          - --cert-dir=/tmp
+          - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+          - --kubelet-insecure-tls=true
+          - --kubelet-use-node-status-port
+          - --metric-resolution=15s
+  - name: metallb
+    namespace: kube-system
+    chart: metallb/metallb
+  - name: sealed-secrets
+    namespace: kube-system
+    chart: sealed-secrets/sealed-secrets
+    set:
+      - name: fullnameOverride
+        value: sealed-secrets-controller
+
+  ## ingress
+  - name: traefik-gateway-crd
+    namespace: kube-ingress
+    createNamespace: true
+    chart: config/traefik
+
+  ## storage
+  - name: longhorn-namespace
+    chart: config/longhorn
+  - name: longhorn
+    chart: longhorn/longhorn
+    namespace: longhorn-system
+
+  # ## certificates
+  - name: cert-manager
+    namespace: kube-system
+    chart: jetstack/cert-manager
+    set:
+      - name: crds.enabled
+        value: true
+  # - name: cert-manager-config
+  #   namespace: kube-certs
+  #   chart: charts/cert-manager
+  #   needs:
+  #     - cert-manager
+
+  # ## ingress
+  # - name: unifi
+  #   namespace: kube-ingress
+  #   chart: charts/unifi
+
+  # ## apps
+  # - name: apps-namespace
+  #   chart: charts/apps-namespace
+  # - name: homebridge-namespace
+  #   chart: charts/homebridge-namespace
+  # - name: homebridge
+  #   namespace: homebridge
+  #   chart: charts/homebridge
+  # - name: freshrss
+  #   namespace: freshrss
+  #   createNamespace: true
+  #   chart: charts/freshrss
+  # - name: filebrowser
+  #   namespace: apps
+  #   chart: charts/filebrowser
+  # - name: swing-music
+  #   namespace: apps
+  #   chart: charts/swing-music
+  # - name: slskd
+  #   namespace: apps
+  #   chart: charts/slskd
+  # - name: audiobookshelf
+  #   namespace: apps
+  #   chart: charts/audiobookshelf
+  # - name: booklore
+  #   namespace: apps
+  #   chart: charts/booklore
+  # - name: samba-server
+  #   namespace: apps
+  #   chart: charts/samba
+  # - name: ephemera
+  #   namespace: apps
+  #   chart: charts/ephemera
+  # - name: adguard
+  #   namespace: apps
+  #   chart: charts/adguard
+  # - name: worldle-bot
+  #   namespace: worldle
+  #   createNamespace: true
+  #   chart: charts/worldle-bot

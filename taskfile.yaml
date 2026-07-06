@@ -5,6 +5,9 @@ dotenv:
   - .env
 
 includes:
+  helm:
+    taskfile: ./helm/taskfile.yaml
+    dir: ./helm
   talos:
     taskfile: ./talos/taskfile.yaml
     dir: ./talos

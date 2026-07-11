@@ -1,0 +1,17 @@
+apiVersion: certmanager.step.sm/v1beta1
+kind: StepClusterIssuer
+metadata:
+  name: step-issuer
+spec:
+  # The CA URL:
+  url: https://step-certificates.kube-system.svc.cluster.local
+  # The base64 encoded version of the CA root certificate in PEM format:
+  caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJ4RENDQVdxZ0F3SUJBZ0lSQUp5dk1sOUtXa3IrWWg0TjBITDZoMTh3Q2dZSUtvWkl6ajBFQXdJd1FERWEKTUJnR0ExVUVDaE1SVTNSbGNDQkRaWEowYVdacFkyRjBaWE14SWpBZ0JnTlZCQU1UR1ZOMFpYQWdRMlZ5ZEdsbQphV05oZEdWeklGSnZiM1FnUTBFd0hoY05Nall3TnpBNE1USTFORFUwV2hjTk16WXdOekExTVRJMU5EVTBXakJBCk1Sb3dHQVlEVlFRS0V4RlRkR1Z3SUVObGNuUnBabWxqWVhSbGN6RWlNQ0FHQTFVRUF4TVpVM1JsY0NCRFpYSjAKYVdacFkyRjBaWE1nVW05dmRDQkRRVEJaTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5QXdFSEEwSUFCRDJ0N25rMAovTlJsREU3R0RXMjcvUytDdFlydW1Eb0gvVTNBeUVxNWNmNjhQT1UyRVR0dmV5a3VFdmcwdUJGd3NkTTJPSWt1CkJIWnRUZllUUVRwMGw1Q2pSVEJETUE0R0ExVWREd0VCL3dRRUF3SUJCakFTQmdOVkhSTUJBZjhFQ0RBR0FRSC8KQWdFQk1CMEdBMVVkRGdRV0JCUldsalYvaGpHdjRyQzA5NnZJZEd1ODJRKys3akFLQmdncWhrak9QUVFEQWdOSQpBREJGQWlFQW8rUU04MTRraGdONGZ2SXp0dkppUjJpMG5GMFF3REpHMDMvQVk3dVZmTGtDSUZiTExiZm5sZGJyCis2Y0xIN3FPdTZpeUN6R0pEME11TkdKT0xYTFpUbjVlCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  # The provisioner name, kid, and a reference to the provisioner password secret:
+  provisioner:
+    name: admin
+    kid: TyjMMnDmFxoeN8bE3Z0rS-sU3gSvRcbYVNGQJK97QQw
+    passwordRef:
+      name: step-certificates-provisioner-password
+      key: password
+      namespace: kube-system

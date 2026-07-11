@@ -45,3 +45,8 @@ releases:
           annotations:
             service.beta.kubernetes.io/metal-lb: "true"
             metallb.universe.tf/address-pool: default-pool
+
+  ## certificates
+  - name: issuers
+    namespace: kube-system
+    chart: config/issuers

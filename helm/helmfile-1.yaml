@@ -25,6 +25,8 @@ repositories:
     url: https://charts.longhorn.io
   - name: jetstack
     url: https://charts.jetstack.io
+  - name: smallstep
+    url: https://smallstep.github.io/helm-charts/
   - name: traefik
     url: https://traefik.github.io/charts
 
@@ -63,13 +65,25 @@ releases:
     chart: longhorn/longhorn
     namespace: longhorn-system
 
-  # ## certificates
+  ## certificates
   - name: cert-manager
     namespace: kube-system
     chart: jetstack/cert-manager
     set:
       - name: crds.enabled
         value: true
+  - name: step-certificates
+    namespace: kube-system
+    chart: smallstep/step-certificates
+  - name: step-issuer
+    namespace: kube-system
+    chart: smallstep/step-issuer
+    values:
+      - certManager:
+          serviceAccount:
+            name: cert-manager
+            namespace: kube-system
+
   # - name: cert-manager-config
   #   namespace: kube-certs
   #   chart: charts/cert-manager
@@ -81,7 +95,12 @@ releases:
   #   namespace: kube-ingress
   #   chart: charts/unifi
 
-  # ## apps
+  ## apps
+  - name: apps-namespace
+    chart: charts/apps-namespace
+  - name: test-app
+    chart: charts/test-app
+    namespace: apps
   # - name: apps-namespace
   #   chart: charts/apps-namespace
   # - name: homebridge-namespace

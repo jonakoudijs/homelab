@@ -69,6 +69,7 @@ tasks:
         https://${LAB_CLUSTER_ENDPOINT_HOST}:${LAB_CLUSTER_ENDPOINT_PORT} \
         --config-patch @lab-kube-all.yaml \
         --config-patch @{{.NODE_NAME}}.yaml \
+        --config-patch-control-plane @lab-kube-fix.yaml \
         --install-disk ${LAB_INSTALL_DISK} \
         --install-image ${LAB_INSTALL_IMAGE_URL} \
         --output generated/{{.NODE_NAME}}.yaml \
@@ -112,14 +113,6 @@ tasks:
         --file generated/{{.NODE_NAME}}.yaml \
         --nodes {{.NODE_IP}}
       sleep 3
-
-    # cmd: |
-    #   talosctl apply \
-    #     --file generated/{{.NODE_NAME}}.yaml \
-    #     --nodes {{.NODE_IP}} \
-    #     --config-patch lab-kube-all.yaml \
-    #     --config-patch {{.NODE_NAME}}.yaml
-    #   sleep 5
 
   reboot:*:*:
     vars:

@@ -34,6 +34,9 @@ file in the root of this repository:
 | LAB_CLUSTER_ENDPOINT_HOST | ""      | IP or host of the Kubernetes API VIP. |
 | LAB_CLUSTER_ENDPOINT_PORT | "6443"  | Port of the Kubernetes API VIP.       |
 
+Kubernetes specific configuration is either defined in Helm values in the `helmfile-`
+files or in manifests in the [helm/config/](helm/config/) directory.
+
 ## Talos Setup
 
 First generate the Talos image that will be used for installing the nodes from
@@ -74,7 +77,29 @@ Documentation on configurations of various components can be found here:
 - [Traefik](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml)
 - [KubeSeal](https://github.com/bitnami-labs/sealed-secrets?tab=readme-ov-file#overview)
 - [Cert Manager](https://cert-manager.io/docs/)
+- [Step CA](https://smallstep.com/docs/step-ca/)
 - [NFS External provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/charts/nfs-subdir-external-provisioner)
+
+## Configuration
+
+Where possible the setup and configuration of the applications deployed in
+Kubernetes are either defined as manifests/helm charts or automatically
+generated and used. However the following components require manual steps:
+
+1. **Step CA** - To locally issue certificates Step CA is used. Both Step CA
+and Step Issuer are installed via Helm charts. During setup things like the root
+certificate are generated and should be defined in the
+[helm/config/issuers/step-issuer.yaml](helm/config/issuers/step-issuer.yaml)
+file. See the [step-issuer documentation](https://github.com/smallstep/step-issuer#readme)
+for details.
+
+2. **Root CA** - After Step CA has been deployed and configured make sure
+to import the generated root CA on every devices that is going to connect
+to endpoints with using these certificates. Use this command to retrieve
+the root CA directly:
+```sh
+kubectl get configmap step-certificates-certs -n kube-system -o jsonpath='{.data.root_ca\.crt}'
+```
 
 ## Secrets
 

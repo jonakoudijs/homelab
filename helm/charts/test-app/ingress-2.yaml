@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-app-2
+spec:
+  rules:
+    - host: test-2.koudijs.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: test-app
+                port:
+                  number: 80
+  tls:
+    - secretName: test-2-koudijs-lan
+      hosts:
+        - test-2.koudijs.lan

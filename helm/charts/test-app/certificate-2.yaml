@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: test-2-koudijs-lan
+spec:
+  secretName: test-2-koudijs-lan
+  commonName: test-2.koudijs.lan
+  dnsNames:
+    - test-2.koudijs.lan
+  issuerRef:
+    group: certmanager.step.sm
+    kind: StepClusterIssuer
+    name: step-issuer

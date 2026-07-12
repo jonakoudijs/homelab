@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fusion
+  labels:
+    app: fusion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fusion
+  template:
+    metadata:
+      labels:
+        app: fusion
+    spec:
+      containers:
+        - name: fusion
+          image: ghcr.io/0x2e/fusion:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FUSION_FEVER_USERNAME
+              value: "fusion"
+            - name: FUSION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fusion-secret
+                  key: fusion-password
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - mountPath: /data
+              name: fusion-data
+      volumes:
+        - name: fusion-data
+          persistentVolumeClaim:
+            claimName: fusion-data

@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fusion
+spec:
+  rules:
+    - host: rss.koudijs.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fusion
+                port:
+                  number: 8080
+  tls:
+    - secretName: rss-koudijs-lan
+      hosts:
+        - rss.koudijs.lan

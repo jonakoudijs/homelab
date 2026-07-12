@@ -13,6 +13,16 @@ hooks:
       - "--namespace=kube-system"
 
 releases:
+  ## apps
+  - name: apps-namespace
+    chart: charts/apps-namespace
+  - name: test-app
+    chart: charts/test-app
+    namespace: apps
+  - name: fusion-rss
+    chart: charts/fusion
+    namespace: apps
+
   ## system
   - name: metallb-config
     namespace: kube-system

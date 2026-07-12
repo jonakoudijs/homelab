@@ -96,13 +96,6 @@ releases:
   #   chart: charts/unifi
 
   ## apps
-  - name: apps-namespace
-    chart: charts/apps-namespace
-  - name: test-app
-    chart: charts/test-app
-    namespace: apps
-  # - name: apps-namespace
-  #   chart: charts/apps-namespace
   # - name: homebridge-namespace
   #   chart: charts/homebridge-namespace
   # - name: homebridge

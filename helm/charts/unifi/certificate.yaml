@@ -6,7 +6,8 @@ metadata:
 spec:
   secretName: unifi-cloud-key-tls
   dnsNames:
-    - unifi.koudijs.me
+    - unifi.koudijs.lan
   issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
+    group: certmanager.step.sm
+    kind: StepClusterIssuer
+    name: step-issuer

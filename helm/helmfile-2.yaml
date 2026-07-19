@@ -19,6 +19,9 @@ releases:
   - name: test-app
     chart: charts/test-app
     namespace: apps
+  - name: unifi
+    chart: charts/unifi
+    namespace: apps
   - name: fusion-rss
     chart: charts/fusion
     namespace: apps

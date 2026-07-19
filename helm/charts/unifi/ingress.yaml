@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`unifi.koudijs.me`) && PathPrefix(`/`)
+    - match: Host(`unifi.koudijs.lan`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: unifi-cloud-key

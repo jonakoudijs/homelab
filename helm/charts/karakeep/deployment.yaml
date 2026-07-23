@@ -1,0 +1,38 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karakeep
+  labels:
+    app: karakeep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: karakeep
+  template:
+    metadata:
+      labels:
+        app: karakeep
+    spec:
+      containers:
+        - name: karakeep
+          image: ghcr.io/karakeep-app/karakeep:release
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DATA_DIR
+              value: "/data"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: karakeep-secret
+                  key: nextauth-secret
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: /data
+              name: karakeep-data
+      volumes:
+        - name: karakeep-data
+          persistentVolumeClaim:
+            claimName: karakeep-data

@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monochrome
+  labels:
+    app: monochrome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monochrome
+  template:
+    metadata:
+      labels:
+        app: monochrome
+    spec:
+      containers:
+        - name: monochrome
+          image: ghcr.io/jonakoudijs/monochrome:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4173
+          volumeMounts:
+            - mountPath: /data
+              name: monochrome-data
+      volumes:
+        - name: monochrome-data
+          persistentVolumeClaim:
+            claimName: monochrome-data

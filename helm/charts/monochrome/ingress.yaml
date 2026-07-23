@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: monochrome
+spec:
+  rules:
+    - host: music.koudijs.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: monochrome
+                port:
+                  number: 4173
+  tls:
+    - secretName: music-koudijs-lan
+      hosts:
+        - music.koudijs.lan

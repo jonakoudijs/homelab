@@ -25,6 +25,12 @@ releases:
   - name: fusion-rss
     chart: charts/fusion
     namespace: apps
+  - name: monochrome
+    chart: charts/monochrome
+    namespace: apps
+  - name: karakeep
+    chart: charts/karakeep
+    namespace: apps
 
   ## system
   - name: metallb-config

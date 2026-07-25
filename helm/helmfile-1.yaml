@@ -29,6 +29,8 @@ repositories:
     url: https://smallstep.github.io/helm-charts/
   - name: traefik
     url: https://traefik.github.io/charts
+  - name: jameswynn
+    url: https://jameswynn.github.io/helm-charts
 
 releases:
   ## system
@@ -84,27 +86,12 @@ releases:
             name: cert-manager
             namespace: kube-system
 
-  # - name: cert-manager-config
-  #   namespace: kube-certs
-  #   chart: charts/cert-manager
-  #   needs:
-  #     - cert-manager
-
-  # ## ingress
-  # - name: unifi
-  #   namespace: kube-ingress
-  #   chart: charts/unifi
-
   ## apps
   # - name: homebridge-namespace
   #   chart: charts/homebridge-namespace
   # - name: homebridge
   #   namespace: homebridge
   #   chart: charts/homebridge
-  # - name: freshrss
-  #   namespace: freshrss
-  #   createNamespace: true
-  #   chart: charts/freshrss
   # - name: filebrowser
   #   namespace: apps
   #   chart: charts/filebrowser
@@ -123,9 +110,6 @@ releases:
   # - name: samba-server
   #   namespace: apps
   #   chart: charts/samba
-  # - name: ephemera
-  #   namespace: apps
-  #   chart: charts/ephemera
   # - name: adguard
   #   namespace: apps
   #   chart: charts/adguard

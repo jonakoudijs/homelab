@@ -3,6 +3,12 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: unifi-cloud-key-route
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/description: Dynamically Detected Homepage
+    gethomepage.dev/group: Operations
+    gethomepage.dev/icon: homepage.png
+    gethomepage.dev/name: Homepage
 spec:
   entryPoints:
     - websecure

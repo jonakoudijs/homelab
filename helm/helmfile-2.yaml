@@ -32,6 +32,56 @@ releases:
     chart: charts/karakeep
     namespace: apps
 
+  ## homepage
+  - name: metallb-config
+    namespace: apps
+    chart: config/homepage
+  - name: homepage
+    chart: jameswynn/homepage
+    namespace: apps
+    values:
+      - env:
+        - name: HOMEPAGE_ALLOWED_HOSTS
+          value: koudijs.lan
+      - enableRbac: true
+      - ingress:
+          main:
+            enabled: true
+            hosts:
+              - host: koudijs.lan
+                paths:
+                  - path: /
+                    pathType: Prefix
+            tls:
+              - secretName: koudijs-lan
+                hosts:
+                  - koudijs.lan
+      - config:
+          widgets:
+            - resources:
+                backend: kubernetes
+                expanded: true
+                cpu: true
+                memory: true
+            - search:
+                provider: duckduckgo
+                target: _blank
+            - kubernetes:
+                cluster:
+                  show: false
+                  # cpu: true
+                  # memory: true
+                  # showLabel: true
+                  # label: "cluster"
+                nodes:
+                  show: true
+                  cpu: true
+                  memory: true
+                  showLabel: true
+          kubernetes:
+            mode: cluster
+            gateway: true
+
   ## system
   - name: metallb-config
     namespace: kube-system

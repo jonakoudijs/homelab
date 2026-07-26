@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: grimmory-database
+spec:
+  selector:
+    matchLabels:
+      app: grimmory-database
+  serviceName: "grimmory-database"
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: grimmory-database
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: mariadb
+          image: lscr.io/linuxserver/mariadb:11.4.5
+          env:
+            - name: DB_USER_ID
+              value: "1000"
+            - name: DB_GROUP_ID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: MYSQL_DATABASE
+              value: "grimmory"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grimmory-secret
+                  key: database-root-password
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grimmory-secret
+                  key: database-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grimmory-secret
+                  key: database-password
+          ports:
+            - containerPort: 3306
+              name: db
+          volumeMounts:
+            - name: config
+              mountPath: /config
+  volumeClaimTemplates:
+    - metadata:
+        name: config
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 2Gi

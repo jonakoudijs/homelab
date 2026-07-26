@@ -31,9 +31,12 @@ releases:
   - name: karakeep
     chart: charts/karakeep
     namespace: apps
+  - name: grimmory
+    chart: charts/grimmory
+    namespace: apps
 
   ## homepage
-  - name: metallb-config
+  - name: homepage-config
     namespace: apps
     chart: config/homepage
   - name: homepage

@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grimmory
+spec:
+  selector:
+    app: grimmory
+  ports:
+    - port: 6060
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grimmory-database
+spec:
+  selector:
+    app: grimmory-database
+  ports:
+    - port: 3306

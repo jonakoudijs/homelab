@@ -29,8 +29,6 @@ repositories:
     url: https://smallstep.github.io/helm-charts/
   - name: traefik
     url: https://traefik.github.io/charts
-  - name: jameswynn
-    url: https://jameswynn.github.io/helm-charts
 
 releases:
   ## system
@@ -61,11 +59,12 @@ releases:
     chart: config/traefik
 
   ## storage
-  - name: longhorn-namespace
-    chart: config/longhorn
   - name: longhorn
+    namespace: kube-system
     chart: longhorn/longhorn
-    namespace: longhorn-system
+    values:
+      - global:
+          timezone: "Europe/Amsterdam"
 
   ## certificates
   - name: cert-manager

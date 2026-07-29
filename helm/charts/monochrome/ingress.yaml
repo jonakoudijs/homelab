@@ -5,7 +5,7 @@ metadata:
   name: monochrome
 spec:
   rules:
-    - host: music.koudijs.lan
+    - host: stream.music.koudijs.lan
       http:
         paths:
           - path: /
@@ -16,6 +16,6 @@ spec:
                 port:
                   number: 4173
   tls:
-    - secretName: music-koudijs-lan
+    - secretName: stream-music-koudijs-lan
       hosts:
-        - music.koudijs.lan
+        - stream.music.koudijs.lan

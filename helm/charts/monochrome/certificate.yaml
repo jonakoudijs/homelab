@@ -1,12 +1,12 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: music-koudijs-lan
+  name: stream-music-koudijs-lan
 spec:
-  secretName: music-koudijs-lan
-  commonName: music.koudijs.lan
+  secretName: stream-music-koudijs-lan
+  commonName: stream.music.koudijs.lan
   dnsNames:
-    - music.koudijs.lan
+    - stream.music.koudijs.lan
   issuerRef:
     group: certmanager.step.sm
     kind: StepClusterIssuer

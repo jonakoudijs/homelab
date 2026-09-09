@@ -2,40 +2,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: samba-server
-  labels:
-    app: samba-server
+  name: samba
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: samba-server
+      app: samba
   template:
     metadata:
       labels:
-        app: samba-server
+        app: samba
     spec:
-      hostNetwork: true
       containers:
-        - name: samba-server
-          image: quay.io/samba.org/samba-server:latest
-          imagePullPolicy: IfNotPresent
+        - name: samba
+          image: dockurr/samba:latest
+          env:
+            # - name: UID
+            #   value: "1002"
+            # - name: GID
+            #   value: "1005"
+            - name: NAME
+              value: Data
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: samba-secret
+                  key: USER
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: samba-secret
+                  key: PASS
           ports:
-            - containerPort: 445
+            - name: smb
+              containerPort: 445
+              protocol: TCP
           volumeMounts:
-            - mountPath: /share/music
-              name: swing-music-data
-            - mountPath: /share/audiobooks
-              name: audiobookshelf-audiobooks
-            - mountPath: /share/soulseek
-              name: slskd-data
+            - name: navidrome-music
+              mountPath: /storage/navidrome-music
       volumes:
-        - name: swing-music-data
+        - name: navidrome-music
           persistentVolumeClaim:
-            claimName: swing-music-data
-        - name: audiobookshelf-audiobooks
-          persistentVolumeClaim:
-            claimName: audiobookshelf-audiobooks
-        - name: slskd-data
-          persistentVolumeClaim:
-            claimName: slskd-data
+            claimName: navidrome-music

@@ -45,6 +45,35 @@ releases:
   - name: longhorn-config
     namespace: kube-system
     chart: config/longhorn
+  - name: keel
+    namespace: kube-system
+    chart: keel/keel
+    values:
+      - service:
+          enabled: true
+          type: ClusterIP
+          externalPort: 9300
+          #clusterIP: ""
+      - basicauth:
+          enabled: true
+          user: "jona"
+          password: "sahnop-6boqna-joQtik"
+      - ingress:
+          enabled: true
+          hosts:
+            - host: keel.koudijs.lan
+              paths:
+                - /
+          tls:
+            - secretName: keel-koudijs-lan
+              hosts:
+                - keel.koudijs.lan
+  - name: keel-config
+    namespace: kube-system
+    chart: config/keel
+  - name: samba-server
+    namespace: apps
+    chart: charts/samba
 
   ## ingress
   - name: traefik

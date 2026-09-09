@@ -29,6 +29,8 @@ repositories:
     url: https://smallstep.github.io/helm-charts/
   - name: traefik
     url: https://traefik.github.io/charts
+  - name: keel
+    url: https://charts.keel.sh
 
 releases:
   ## system

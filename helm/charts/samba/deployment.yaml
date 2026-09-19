@@ -40,7 +40,12 @@ spec:
           volumeMounts:
             - name: navidrome-music
               mountPath: /storage/navidrome-music
+            - name: jellyfin-media
+              mountPath: /storage/jellyfin-media
       volumes:
         - name: navidrome-music
           persistentVolumeClaim:
             claimName: navidrome-music
+        - name: jellyfin-media
+          persistentVolumeClaim:
+            claimName: jellyfin-media

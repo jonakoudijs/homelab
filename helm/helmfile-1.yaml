@@ -31,6 +31,12 @@ repositories:
     url: https://traefik.github.io/charts
   - name: keel
     url: https://charts.keel.sh
+  - name: cnpg
+    url: https://cloudnative-pg.github.io/charts
+  - name: jellyfin
+    url: https://jellyfin.github.io/jellyfin-helm
+  - name: nextcloud
+    url: https://nextcloud.github.io/helm/
 
 releases:
   ## system
@@ -68,6 +74,12 @@ releases:
       - global:
           timezone: "Europe/Amsterdam"
 
+  ## cnpg
+  - name: cnpg
+    chart: cnpg/cloudnative-pg
+    namespace: cnpg-system
+    createNamespace: true
+
   ## certificates
   - name: cert-manager
     namespace: kube-system
@@ -86,35 +98,3 @@ releases:
           serviceAccount:
             name: cert-manager
             namespace: kube-system
-
-  ## apps
-  # - name: homebridge-namespace
-  #   chart: charts/homebridge-namespace
-  # - name: homebridge
-  #   namespace: homebridge
-  #   chart: charts/homebridge
-  # - name: filebrowser
-  #   namespace: apps
-  #   chart: charts/filebrowser
-  # - name: swing-music
-  #   namespace: apps
-  #   chart: charts/swing-music
-  # - name: slskd
-  #   namespace: apps
-  #   chart: charts/slskd
-  # - name: audiobookshelf
-  #   namespace: apps
-  #   chart: charts/audiobookshelf
-  # - name: booklore
-  #   namespace: apps
-  #   chart: charts/booklore
-  # - name: samba-server
-  #   namespace: apps
-  #   chart: charts/samba
-  # - name: adguard
-  #   namespace: apps
-  #   chart: charts/adguard
-  # - name: worldle-bot
-  #   namespace: worldle
-  #   createNamespace: true
-  #   chart: charts/worldle-bot

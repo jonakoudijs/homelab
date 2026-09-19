@@ -16,9 +16,6 @@ releases:
   ## apps
   - name: apps-namespace
     chart: charts/apps-namespace
-  - name: test-app
-    chart: charts/test-app
-    namespace: apps
   - name: unifi
     chart: charts/unifi
     namespace: apps
@@ -31,12 +28,56 @@ releases:
   - name: karakeep
     chart: charts/karakeep
     namespace: apps
-  # - name: grimmory
-  #   chart: charts/grimmory
-  #   namespace: apps
   - name: navidrome
     chart: charts/navidrome
     namespace: apps
+  - name: jellyfin
+    chart: jellyfin/jellyfin
+    namespace: apps
+    values:
+      - persistence:
+          config:
+            enabled: true
+            size: 5Gi
+          media:
+            enabled: true
+            size: 50Gi
+            accessMode: ReadWriteMany
+      - ingress:
+          enabled: true
+          hosts:
+            - host: media.koudijs.lan
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: media-koudijs-lan
+              hosts:
+                - media.koudijs.lan
+  - name: jellyfin-config
+    chart: config/jellyfin
+    namespace: apps
+  # - name: nextcloud-config
+  #   chart: config/nextcloud
+  #   namespace: apps
+  # - name: nextcloud
+  #   chart: nextcloud/nextcloud
+  #   namespace: apps
+  #   values:
+  #     - internalDatabase:
+  #         enabled: false
+  #     - externalDatabase:
+  #         enabled: true
+  #         type: postgresql
+  #         host: "myhost:1234"
+  #         existingSecret:
+  #           enabled: true
+  #           secretName: test
+
+  ## cnpg
+  - name: cnpg-config
+    chart: config/cnpg
+    namespace: cnpg-system
 
   ## system
   - name: metallb-config

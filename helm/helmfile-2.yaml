@@ -57,27 +57,61 @@ releases:
   - name: jellyfin-config
     chart: config/jellyfin
     namespace: apps
-  # - name: nextcloud-config
-  #   chart: config/nextcloud
-  #   namespace: apps
-  # - name: nextcloud
-  #   chart: nextcloud/nextcloud
-  #   namespace: apps
-  #   values:
-  #     - internalDatabase:
-  #         enabled: false
-  #     - externalDatabase:
-  #         enabled: true
-  #         type: postgresql
-  #         host: "myhost:1234"
-  #         existingSecret:
-  #           enabled: true
-  #           secretName: test
+  - name: nextcloud-config
+    chart: config/nextcloud
+    namespace: apps
+  - name: nextcloud
+    chart: nextcloud/nextcloud
+    namespace: apps
+    values:
+      - nextcloud:
+          host: cloud.koudijs.lan
+          extraEnv:
+            - name: OVERWRITEPROTOCOL
+              value: "https"
+            - name: TRUSTED_PROXIES
+              value: "10.244.1.0"
+            - name: OVERWRITECONDADDR
+              value: "^10\\.244\\.1\\.0$"
+      - ingress:
+          enabled: true
+          tls:
+            - secretName: cloud-koudijs-lan
+              hosts:
+                - cloud.koudijs.lan
+      - service:
+          annotations:
+            traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
+      - internalDatabase:
+          enabled: false
+      - externalDatabase:
+          enabled: true
+          type: postgresql
+          #host: "myhost:1234"
+          existingSecret:
+            enabled: true
+            secretName: nextcloud-db-credentials
+            usernameKey: username
+            passwordKey: password
+            databaseKey: database
+            hostKey: host
+      - redis:
+          enabled: true
+          auth:
+            enabled: true
+            existingSecret: nextcloud-redis-credentials
+            existingSecretPasswordKey: password
+          global:
+            storageClass: longhorn-single-replica
+      - persistence:
+          enabled: true
+      - cronjob:
+          enabled: true
 
   ## cnpg
-  - name: cnpg-config
-    chart: config/cnpg
-    namespace: cnpg-system
+  - name: cnpg-config-apps
+    chart: config/cnpg-apps
+    namespace: apps
 
   ## system
   - name: metallb-config

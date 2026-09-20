@@ -1,9 +1,0 @@
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: cnpg-cluster-shared
-spec:
-  instances: 3
-  storage:
-    storageClass: longhorn-single-replica
-    size: 2Gi

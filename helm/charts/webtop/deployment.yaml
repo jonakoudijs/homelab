@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webtop
+  labels:
+    app: webtop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webtop
+  template:
+    metadata:
+      labels:
+        app: webtop
+    spec:
+      containers:
+        - name: webtop
+          image: lscr.io/linuxserver/webtop:ubuntu-kde
+          # env:
+          #   - name: ND_ENABLEINSIGHTSCOLLECTOR
+          #     value: "false"
+          ports:
+            - containerPort: 3001
+          volumeMounts:
+            - mountPath: /config
+              name: webtop-config
+      volumes:
+        - name: webtop-config
+          persistentVolumeClaim:
+            claimName: webtop-config

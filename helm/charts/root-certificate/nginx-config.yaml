@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: root-cert-nginx
+data:
+  default.conf: |
+    server {
+        listen 80 default_server;
+        server_name _;
+
+        root /usr/share/nginx/html;
+        index root_ca.crt;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        location ~ \.crt$ {
+            default_type application/x-x509-ca-cert;
+        }
+    }

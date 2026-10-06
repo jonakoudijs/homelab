@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: root-cert
+spec:
+  selector:
+    app: root-cert
+  ports:
+    - port: 80

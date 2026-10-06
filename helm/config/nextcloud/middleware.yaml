@@ -1,0 +1,9 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: nextcloud-dav-discovery
+spec:
+  redirectRegex:
+    regex: "^https://cloud\\.koudijs\\.lan/\\.well-known/(caldav|carddav)$"
+    replacement: "https://cloud.koudijs.lan/remote.php/dav/"
+    permanent: true

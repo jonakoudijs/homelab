@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: root-cert
+spec:
+  rules:
+    - host: root.koudijs.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: root-cert
+                port:
+                  number: 80
+  tls:
+    - secretName: root-koudijs-lan
+      hosts:
+        - root.koudijs.lan

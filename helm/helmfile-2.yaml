@@ -28,8 +28,6 @@ releases:
   - name: karakeep
     chart: charts/karakeep
     namespace: apps
-  - name: navidrome
-    chart: charts/navidrome
     namespace: apps
   - name: jellyfin
     chart: jellyfin/jellyfin
@@ -67,8 +65,6 @@ releases:
       - nextcloud:
           host: cloud.koudijs.lan
           extraEnv:
-            - name: OVERWRITEPROTOCOL
-              value: "https"
             - name: TRUSTED_PROXIES
               value: "10.244.1.0"
             - name: OVERWRITECONDADDR
@@ -79,6 +75,9 @@ releases:
             - secretName: cloud-koudijs-lan
               hosts:
                 - cloud.koudijs.lan
+      - phpClientHttpsFix:
+          enabled: true
+          protocol: https
       - service:
           annotations:
             traefik.ingress.kubernetes.io/service.sticky.cookie: "true"
@@ -87,7 +86,6 @@ releases:
       - externalDatabase:
           enabled: true
           type: postgresql
-          #host: "myhost:1234"
           existingSecret:
             enabled: true
             secretName: nextcloud-db-credentials
@@ -182,3 +180,6 @@ releases:
   - name: issuers
     namespace: kube-system
     chart: config/issuers
+  - name: root-ca
+    namespace: kube-system
+    chart: charts/root-certificate

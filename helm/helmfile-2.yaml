@@ -28,7 +28,6 @@ releases:
   - name: karakeep
     chart: charts/karakeep
     namespace: apps
-    namespace: apps
   - name: jellyfin
     chart: jellyfin/jellyfin
     namespace: apps

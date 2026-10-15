@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lidarr
+  labels:
+    app: lidarr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lidarr
+  template:
+    metadata:
+      labels:
+        app: lidarr
+    spec:
+      containers:
+        - name: lidarr
+          image: lscr.io/linuxserver/lidarr:latest
+          imagePullPolicy: Always
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Europe/Amsterdam"
+          ports:
+            - containerPort: 8686
+          volumeMounts:
+            - mountPath: /config
+              name: lidarr-config
+            - mountPath: /music
+              name: lidarr-music
+            - mountPath: /downloads
+              name: lidarr-downloads
+      volumes:
+        - name: lidarr-config
+          persistentVolumeClaim:
+            claimName: lidarr-config
+        - name: lidarr-music
+          persistentVolumeClaim:
+            claimName: lidarr-music
+        - name: lidarr-downloads
+          persistentVolumeClaim:
+            claimName: lidarr-downloads

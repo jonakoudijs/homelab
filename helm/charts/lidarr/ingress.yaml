@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr
+spec:
+  rules:
+    - host: lidarr.koudijs.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lidarr
+                port:
+                  number: 8686
+  tls:
+    - secretName: lidarr-koudijs-lan
+      hosts:
+        - lidarr.koudijs.lan

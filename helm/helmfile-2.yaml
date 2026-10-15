@@ -104,6 +104,9 @@ releases:
           enabled: true
       - cronjob:
           enabled: true
+  - name: lidarr
+    chart: charts/lidarr
+    namespace: apps
 
   ## cnpg
   - name: cnpg-config-apps

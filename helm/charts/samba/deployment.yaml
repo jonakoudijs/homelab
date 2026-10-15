@@ -17,12 +17,12 @@ spec:
         - name: samba
           image: dockurr/samba:latest
           env:
-            # - name: UID
-            #   value: "1002"
-            # - name: GID
-            #   value: "1005"
+            - name: UID
+              value: "1000"
+            - name: GID
+              value: "1000"
             - name: NAME
-              value: Data
+              value: Homelab
             - name: USER
               valueFrom:
                 secretKeyRef:
@@ -38,14 +38,9 @@ spec:
               containerPort: 445
               protocol: TCP
           volumeMounts:
-            - name: navidrome-music
-              mountPath: /storage/navidrome-music
             - name: jellyfin-media
               mountPath: /storage/jellyfin-media
       volumes:
-        - name: navidrome-music
-          persistentVolumeClaim:
-            claimName: navidrome-music
         - name: jellyfin-media
           persistentVolumeClaim:
             claimName: jellyfin-media

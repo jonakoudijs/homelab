@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: soulseek-koudijs-lan
+spec:
+  secretName: soulseek-koudijs-lan
+  commonName: soulseek.koudijs.lan
+  dnsNames:
+    - soulseek.koudijs.lan
+  issuerRef:
+    group: certmanager.step.sm
+    kind: StepClusterIssuer
+    name: step-issuer

@@ -40,7 +40,12 @@ spec:
           volumeMounts:
             - name: jellyfin-media
               mountPath: /storage/jellyfin-media
+            - name: slskd-data
+              mountPath: /storage/slskd-data
       volumes:
         - name: jellyfin-media
           persistentVolumeClaim:
             claimName: jellyfin-media
+        - name: slskd-data
+          persistentVolumeClaim:
+            claimName: slskd-data
